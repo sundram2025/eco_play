@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPlay - Gamified Environmental Education</title>
+    <!-- TailwindCSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconify for icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #22c55e;
+            --primary-blue: #3b82f6;
+            --primary-purple: #a855f7;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #0f172a, #111827);
+            color: white;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-text 3s linear infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .badge-card {
+            perspective: 1000px;
+        }
+        
+        .badge-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .badge-card:hover .badge-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .badge-front, .badge-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .badge-back {
+            transform: rotateY(180deg);
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform-origin: 50% 50%;
+        }
+        
+        .leaderboard-row {
+            transition: all 0.3s ease;
+        }
+        
+        .leaderboard-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .tab-active {
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-blue));
+            color: white;
+        }
+        
+        .stats-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(34, 197, 94, 0.1), rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full py-4 px-6 lg:px-12 flex justify-between items-center glassmorphism z-50">
+        <div class="flex items-center">
+            <iconify-icon icon="mdi:earth" width="32" height="32" class="text-green-400 mr-2"></iconify-icon>
+            <h1 class="text-2xl font-bold gradient-text">EcoPlay</h1>
+        </div>
+        
+        <div class="hidden md:flex space-x-8 items-center">
+            <a href="#home" class="hover:text-green-400 transition-colors font-medium">Home</a>
+            <a href="ai_agent.html" class="hover:text-green-400 transition-colors font-medium">Eco-Mentor AI</a>
+            <a href="quiz.html" class="hover:text-green-400 transition-colors font-medium">Quiz</a>
+            <a href="#leaderboard" class="hover:text-green-400 transition-colors font-medium">Leaderboard</a>
+            <a href="#badges" class="hover:text-green-400 transition-colors font-medium">Badges</a>
+            <a href="sign_in.html"><button class="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-2 rounded-full font-bold hover:scale-105 transition-transform shadow-lg">Get Started</button></a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-white focus:outline-none">
+                <iconify-icon icon="mdi:menu" width="32" height="32"></iconify-icon>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden fixed top-16 left-0 w-full glassmorphism z-40 hidden transition-all duration-300">
+        <div class="flex flex-col p-4 space-y-4">
+            <a href="#home" class="hover:text-green-400 transition-colors py-3 px-4 rounded-lg hover:bg-white/5">Home</a>
+            <a href="#features" class="hover:text-green-400 transition-colors py-3 px-4 rounded-lg hover:bg-white/5">features</a>
+            <a href="#quiz" class="hover:text-green-400 transition-colors py-3 px-4 rounded-lg hover:bg-white/5">Quiz</a>
+            <a href="#leaderboard" class="hover:text-green-400 transition-colors py-3 px-4 rounded-lg hover:bg-white/5">Leaderboard</a>
+            <a href="#badges" class="hover:text-green-400 transition-colors py-3 px-4 rounded-lg hover:bg-white/5">Badges</a>
+            <button class="bg-gradient-to-r from-green-500 to-blue-500 px-4 py-3 rounded-full font-bold hover:scale-105 transition-transform w-full mt-4">Get Started</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-20 pb-10 px-6 lg:px-12 relative overflow-hidden">
+        <div class="absolute inset-0 gradient-bg opacity-20"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+        
+        <div class="container mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="text-center lg:text-left">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Learn, Play & Protect <span class="gradient-text">the Environment</span> 🌍</h2>
+                <p class="text-xl mb-8 text-gray-300">EcoPlay is a gamified environmental education platform where students can play quizzes, earn badges, and compete on leaderboards.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <button class="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-4 rounded-full hover:scale-105 transition-transform shadow-lg flex items-center justify-center gap-2">
+                        <iconify-icon icon="mdi:rocket-launch" width="24"></iconify-icon>
+                        <span>Start Learning</span>
+                    </button>
+                    <button class="bg-white/10 backdrop-blur-lg text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition-all border border-white/10 flex items-center justify-center gap-2">
+                        <iconify-icon icon="mdi:play-circle" width="24"></iconify-icon>
+                        <span><a href = "https://youtu.be/X2YgM1Zw4_E?si=_zlUHDoELu6JDqfe">Watch Demo</a></span>
+                    </button>
+                </div>
+                
+                <div class="mt-12 flex flex-wrap gap-6 justify-center lg:justify-start">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400"></iconify-icon>
+                        <span>Interactive Quizzes</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400"></iconify-icon>
+                        <span>Earn Rewards</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400"></iconify-icon>
+                        <span>Compete Globally</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-center relative">
+                <div class="floating">
+                    <img src="earth.png" alt="Earth" class="w-full max-w-md">
+                </div>
+                
+                <!-- Floating elements -->
+                <div class="absolute top-10 left-10 w-24 h-24 glassmorphism rounded-full flex items-center justify-center pulse">
+                    <iconify-icon icon="mdi:leaf" width="32" class="text-green-400"></iconify-icon>
+                </div>
+                
+                <div class="absolute bottom-10 right-10 w-20 h-20 glassmorphism rounded-full flex items-center justify-center pulse" style="animation-delay: 1s;">
+                    <iconify-icon icon="mdi:recycle" width="28" class="text-blue-400"></iconify-icon>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-6 lg:px-12">
+        <div class="container mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="stats-card glassmorphism rounded-xl p-6 text-center card-hover">
+                <div class="text-4xl font-bold gradient-text mb-2">10K+</div>
+                <div class="text-gray-300">Active Users</div>
+            </div>
+            
+            <div class="stats-card glassmorphism rounded-xl p-6 text-center card-hover">
+                <div class="text-4xl font-bold gradient-text mb-2">500+</div>
+                <div class="text-gray-300">Quizzes</div>
+            </div>
+            
+            <div class="stats-card glassmorphism rounded-xl p-6 text-center card-hover">
+                <div class="text-4xl font-bold gradient-text mb-2">50+</div>
+                <div class="text-gray-300">Schools</div>
+            </div>
+            
+            <div class="stats-card glassmorphism rounded-xl p-6 text-center card-hover">
+                <div class="text-4xl font-bold gradient-text mb-2">12K+</div>
+                <div class="text-gray-300">Badges Earned</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="py-12 bg-gradient-to-r from-gray-800 to-gray-900 overflow-hidden">
+        <h3 class="text-center text-2xl font-bold mb-8">Trusted by Schools & Environmental Organizations Worldwide</h3>
+        
+        <div class="marquee-container">
+            <div class="marquee-content flex space-x-12">
+                <!-- Marquee Items -->
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/18/15/58/ecology-1835361_960_720.png" alt="Ecology" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2021/03/27/06/31/recycle-6127750_960_720.png" alt="Recycle" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2021/09/07/07/11/nature-6603067_960_720.png" alt="Nature" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2021/10/11/04/07/earth-6700011_960_720.png" alt="Earth" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2016/11/18/15/58/ecology-1835361_960_720.png" alt="Ecology" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2021/03/27/06/31/recycle-6127750_960_720.png" alt="Recycle" class="h-16 hover:scale-110 transition-transform">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="https://cdn.pixabay.com/photo/2021/09/07/07/11/nature-6603067_960_720.png" alt="Nature" class="h-16 hover:scale-110 transition-transform">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-16 px-6 lg:px-12">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4">How <span class="gradient-text">EcoPlay</span> Works</h2>
+            <p class="text-xl text-center text-gray-300 mb-12">Engage, learn, and compete in environmental education</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glassmorphism rounded-2xl p-8 text-center card-hover">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center mx-auto mb-6">
+                        <iconify-icon icon="mdi:gamepad-variant" width="36" class="text-white"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Interactive Quizzes</h3>
+                    <p class="text-gray-300">Test your knowledge with fun, engaging quizzes on various environmental topics. Learn while having fun!</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="glassmorphism rounded-2xl p-8 text-center card-hover">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center mx-auto mb-6">
+                        <iconify-icon icon="mdi:trophy-award" width="36" class="text-white"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Earn Badges</h3>
+                    <p class="text-gray-300">Collect unique badges as you progress. Show off your achievements and motivate others to learn!</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="glassmorphism rounded-2xl p-8 text-center card-hover">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-green-500 flex items-center justify-center mx-auto mb-6">
+                        <iconify-icon icon="mdi:poll" width="36" class="text-white"></iconify-icon>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Leaderboards</h3>
+                    <p class="text-gray-300">Compete with students from your school, country, or worldwide. Climb the ranks and become an Eco Champion!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Badges Section -->
+    <section id="badges" class="py-16 px-6 lg:px-12">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4">Collect <span class="gradient-text">Eco Badges</span></h2>
+            <p class="text-xl text-center text-gray-300 mb-12">Earn unique badges as you learn and progress</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Badge 1 -->
+                <div class="badge-card h-48">
+                    <div class="badge-inner relative w-full h-full">
+                        <div class="badge-front glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center mx-auto mb-4">
+                                <iconify-icon icon="mdi:leaf" width="32" class="text-white"></iconify-icon>
+                            </div>
+                            <h3 class="font-bold text-center">Eco Beginner</h3>
+                        </div>
+                        <div class="badge-back glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <h3 class="font-bold text-center mb-2">Eco Beginner</h3>
+                            <p class="text-sm text-center text-gray-300">Complete your first quiz on EcoPlay</p>
+                            <div class="mt-4 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Earned by 92%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Badge 2 -->
+                <div class="badge-card h-48">
+                    <div class="badge-inner relative w-full h-full">
+                        <div class="badge-front glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center mx-auto mb-4">
+                                <iconify-icon icon="mdi:recycle" width="32" class="text-white"></iconify-icon>
+                            </div>
+                            <h3 class="font-bold text-center">Recycling Expert</h3>
+                        </div>
+                        <div class="badge-back glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <h3 class="font-bold text-center mb-2">Recycling Expert</h3>
+                            <p class="text-sm text-center text-gray-300">Score 100% on any recycling quiz</p>
+                            <div class="mt-4 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Earned by 45%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Badge 3 -->
+                <div class="badge-card h-48">
+                    <div class="badge-inner relative w-full h-full">
+                        <div class="badge-front glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center mx-auto mb-4">
+                                <iconify-icon icon="mdi:water" width="32" class="text-white"></iconify-icon>
+                            </div>
+                            <h3 class="font-bold text-center">Water Warrior</h3>
+                        </div>
+                        <div class="badge-back glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <h3 class="font-bold text-center mb-2">Water Warrior</h3>
+                            <p class="text-sm text-center text-gray-300">Complete all water conservation challenges</p>
+                            <div class="mt-4 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Earned by 32%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Badge 4 -->
+                <div class="badge-card h-48">
+                    <div class="badge-inner relative w-full h-full">
+                        <div class="badge-front glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mx-auto mb-4">
+                                <iconify-icon icon="mdi:earth" width="32" class="text-white"></iconify-icon>
+                            </div>
+                            <h3 class="font-bold text-center">Planet Protector</h3>
+                        </div>
+                        <div class="badge-back glassmorphism rounded-2xl p-6 flex flex-col items-center justify-center h-full">
+                            <h3 class="font-bold text-center mb-2">Planet Protector</h3>
+                            <p class="text-sm text-center text-gray-300">Earn all badges in the environmental category</p>
+                            <div class="mt-4 px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-xs">Earned by 12%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-gradient-to-r from-green-500 to-blue-500 px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform flex items-center justify-center gap-2 mx-auto">
+                    <iconify-icon icon="mdi: trophy"></iconify-icon>
+                    <span>View All Badges</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Section -->
+    <section id="leaderboard" class="py-16 px-6 lg:px-12 bg-gradient-to-b from-gray-800 to-gray-900">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4">Global <span class="gradient-text">Leaderboards</span></h2>
+            <p class="text-xl text-center text-gray-300 mb-12">Compete with students from around the world</p>
+            
+            <div class="max-w-4xl mx-auto glassmorphism rounded-2xl p-6">
+                <div class="flex flex-wrap gap-2 mb-8">
+                    <button class="leaderboard-tab px-6 py-3 rounded-full font-bold tab-active" data-tab="club">
+                        <iconify-icon icon="mdi:school" class="mr-2"></iconify-icon>
+                        Club Level
+                    </button>
+                    <button class="leaderboard-tab px-6 py-3 rounded-full font-bold bg-gray-700 hover:bg-gray-600 transition-colors" data-tab="country">
+                        <iconify-icon icon="mdi:earth" class="mr-2"></iconify-icon>
+                        Country Level
+                    </button>
+                    <button class="leaderboard-tab px-6 py-3 rounded-full font-bold bg-gray-700 hover:bg-gray-600 transition-colors" data-tab="world">
+                        <iconify-icon icon="mdi:earth" class="mr-2"></iconify-icon>
+                        World Wide
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-700">
+                                <th class="py-4 text-left">Rank</th>
+                                <th class="py-4 text-left">Name</th>
+                                <th class="py-4 text-left">School</th>
+                                <th class="py-4 text-right">Points</th>
+                                <th class="py-4 text-center">Badges</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="leaderboard-row border-b border-gray-800">
+                                <td class="py-4">
+                                    <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center font-bold">1</div>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center font-bold">ES</div>
+                                        <span>EcoStudent</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">Green Valley High</td>
+                                <td class="py-4 text-right font-bold">2,450</td>
+                                <td class="py-4 text-center">
+                                    <div class="flex justify-center gap-1">
+                                        <iconify-icon icon="mdi:trophy" width="20" class="text-yellow-400"></iconify-icon>
+                                        <span class="font-bold">12</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="leaderboard-row border-b border-gray-800">
+                                <td class="py-4">
+                                    <div class="w-8 h-8 rounded-full bg-gray-500 flex items-center justify-center font-bold">2</div>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center font-bold">GT</div>
+                                        <span>GreenThumb99</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">Eco Academy</td>
+                                <td class="py-4 text-right font-bold">2,380</td>
+                                <td class="py-4 text-center">
+                                    <div class="flex justify-center gap-1">
+                                        <iconify-icon icon="mdi:trophy" width="20" class="text-yellow-400"></iconify-icon>
+                                        <span class="font-bold">10</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="leaderboard-row border-b border-gray-800">
+                                <td class="py-4">
+                                    <div class="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center font-bold">3</div>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center font-bold">PS</div>
+                                        <span>PlanetSavior</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">Earth School</td>
+                                <td class="py-4 text-right font-bold">2,250</td>
+                                <td class="py-4 text-center">
+                                    <div class="flex justify-center gap-1">
+                                        <iconify-icon icon="mdi:trophy" width="20" class="text-yellow-400"></iconify-icon>
+                                        <span class="font-bold">9</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="leaderboard-row border-b border-gray-800">
+                                <td class="py-4">
+                                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center font-bold">4</div>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center font-bold">NL</div>
+                                        <span>NatureLover</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">Forest Hill School</td>
+                                <td class="py-4 text-right font-bold">2,100</td>
+                                <td class="py-4 text-center">
+                                    <div class="flex justify-center gap-1">
+                                        <iconify-icon icon="mdi:trophy" width="20" class="text-yellow-400"></iconify-icon>
+                                        <span class="font-bold">8</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="leaderboard-row">
+                                <td class="py-4">
+                                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center font-bold">5</div>
+                                </td>
+                                <td class="py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold">EW</div>
+                                        <span>EcoWarrior23</span>
+                                    </div>
+                                </td>
+                                <td class="py-4">Sunshine Academy</td>
+                                <td class="py-4 text-right font-bold">1,950</td>
+                                <td class="py-4 text-center">
+                                    <div class="flex justify-center gap-1">
+                                        <iconify-icon icon="mdi:trophy" width="20" class="text-yellow-400"></iconify-icon>
+                                        <span class="font-bold">7</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <button class="bg-gradient-to-r from-green-500 to-blue-500 px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform inline-flex items-center gap-2">
+                        <span>View Full Leaderboard</span>
+                        <iconify-icon icon="mdi:arrow-right"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-6 lg:px-12">
+        <div class="container mx-auto glassmorphism rounded-3xl p-12 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-10 -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-500 rounded-full filter blur-3xl opacity-10 translate-y-1/2 -translate-x-1/2"></div>
+            
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to <span class="gradient-text">start your journey</span>?</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Join thousands of students already learning and having fun with EcoPlay</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-8 py-4 rounded-full hover:scale-105 transition-transform shadow-lg flex items-center justify-center gap-2">
+                    <iconify-icon icon="mdi:account-plus" width="24"></iconify-icon>
+                    <a href="sign_up.html"><span>Create Account</span></a>
+                </button>
+                <button class="bg-white/10 backdrop-blur-lg text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition-all border border-white/10 flex items-center justify-center gap-2">
+                    <iconify-icon icon="mdi:information" width="24"></iconify-icon>
+                    <span>Learn More</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mr. Green AI Assistant -->
+    <div id="ai-assistant" class="fixed bottom-6 right-6 z-50">
+        <!-- Chat Toggle Button -->
+        <button id="chat-toggle" class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center group">
+            <iconify-icon id="chat-icon" icon="mdi:chat" width="28" class="text-white"></iconify-icon>
+            <iconify-icon id="close-icon" icon="mdi:close" width="28" class="text-white hidden"></iconify-icon>
+        </button>
+        
+        <!-- Chat Widget -->
+        <div id="chat-widget" class="absolute bottom-20 right-0 w-80 h-96 glassmorphism rounded-2xl shadow-2xl hidden transform transition-all duration-300 scale-95 opacity-0">
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-t-2xl p-4 flex items-center gap-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <iconify-icon icon="mdi:leaf" width="24" class="text-green-600"></iconify-icon>
+                </div>
+                <div>
+                    <h3 class="font-bold text-white">Mr. Green</h3>
+                    <p class="text-green-100 text-sm">Your Eco Assistant</p>
+                </div>
+                <div class="ml-auto">
+                    <div class="w-3 h-3 bg-green-200 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 p-4 h-64 overflow-y-auto space-y-3">
+                <div class="flex items-start gap-2">
+                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <iconify-icon icon="mdi:leaf" width="16" class="text-white"></iconify-icon>
+                    </div>
+                    <div class="bg-gray-700 rounded-2xl rounded-tl-md p-3 max-w-xs">
+                        <p class="text-sm text-white">Hi! I'm Mr. Green, your eco-friendly assistant. I'm here to help you learn about environmental topics and answer any questions you have!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex gap-2">
+                    <input id="chat-input" type="text" placeholder="Ask Mr. Green anything..." class="flex-1 bg-gray-700 rounded-full px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button id="send-message" class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors">
+                        <iconify-icon icon="mdi:send" width="20" class="text-white"></iconify-icon>
+                    </button>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="flex gap-2 mt-3">
+                    <button class="quick-action px-3 py-1 bg-gray-700 rounded-full text-xs text-gray-300 hover:bg-gray-600 transition-colors" data-message="What can you help me with?">
+                        Help
+                    </button>
+                    <button class="quick-action px-3 py-1 bg-gray-700 rounded-full text-xs text-gray-300 hover:bg-gray-600 transition-colors" data-message="Tell me about climate change">
+                        Climate
+                    </button>
+                    <button class="quick-action px-3 py-1 bg-gray-700 rounded-full text-xs text-gray-300 hover:bg-gray-600 transition-colors" data-message="How can I be more eco-friendly?">
+                        Tips
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 lg:px-12 bg-gray-900">
+        <div class="container mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <iconify-icon icon="mdi:earth" width="32" class="text-green-400 mr-2"></iconify-icon>
+                        <h2 class="text-xl font-bold gradient-text">EcoPlay</h2>
+                    </div>
+                    <p class="text-gray-400">Gamified environmental education platform where students can play quizzes, earn badges, and compete on leaderboards.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition-colors">Home</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-green-400 transition-colors">Features</a></li>
+                        <li><a href="#quiz" class="text-gray-400 hover:text-green-400 transition-colors">Quiz</a></li>
+                        <li><a href="#leaderboard" class="text-gray-400 hover:text-green-400 transition-colors">Leaderboard</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="blog.html" class="text-gray-400 hover:text-green-400 transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition-colors">Tutorials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition-colors">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-400 transition-colors">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="https://www.linkedin.com/in/sundram-77a60534a/" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors">
+                            <iconify-icon icon="mdi:facebook" width="20"></iconify-icon>
+                        </a>
+                        <a href="https://www.linkedin.com/in/sundram-77a60534a/" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors">
+                            <iconify-icon icon="mdi:twitter" width="20"></iconify-icon>
+                        </a>
+                        <a href="https://www.linkedin.com/in/sundram-77a60534a/" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors">
+                            <iconify-icon icon="mdi:instagram" width="20"></iconify-icon>
+                        </a>
+                        <a href="https://www.linkedin.com/in/sundram-77a60534a/" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-500 transition-colors">
+                            <iconify-icon icon="mdi:linkedin" width="20"></iconify-icon>
+                        </a>
+                    </div>
+                    <p class="text-gray-400">Subscribe to our newsletter</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p>Made By SUNDRAM at Smart India Hackathon - EcoPlay</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Quiz functionality
+        const quizOptions = document.querySelectorAll('.quiz-option');
+        const correctAnswer = "Switching to a plant-based diet"; // The correct answer
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const nextButton = document.getElementById('next-question');
+        const quizTimer = document.getElementById('quiz-timer');
+        
+        let timeLeft = 30;
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            if (quizTimer) quizTimer.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                quizOptions.forEach(option => {
+                    option.disabled = true;
+                    if (option.textContent.includes(correctAnswer)) {
+                        option.classList.add('bg-green-600');
+                    }
+                });
+                if (quizFeedback) quizFeedback.classList.remove('hidden');
+                if (nextButton) nextButton.classList.remove('opacity-0');
+            }
+        }, 1000);
+        
+        quizOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                clearInterval(timerInterval);
+                
+                // Disable all options
+                quizOptions.forEach(opt => {
+                    opt.disabled = true;
+                });
+                
+                // Check if answer is correct
+                if (this.textContent.includes(correctAnswer)) {
+                    this.classList.add('bg-green-600');
+                    if (quizFeedback) quizFeedback.classList.remove('hidden');
+                } else {
+                    this.classList.add('bg-red-600');
+                    // Highlight correct answer
+                    quizOptions.forEach(opt => {
+                        if (opt.textContent.includes(correctAnswer)) {
+                            opt.classList.add('bg-green-600');
+                        }
+                    });
+                    if (quizFeedback) quizFeedback.classList.remove('hidden');
+                }
+                
+                if (nextButton) nextButton.classList.remove('opacity-0');
+            });
+        });
+        
+        if (nextButton) {
+            nextButton.addEventListener('click', function() {
+                alert('Moving to next question! In a real application, this would load the next quiz question.');
+            });
+        }
+
+        // Leaderboard tabs
+        const leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
+        
+        leaderboardTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                leaderboardTabs.forEach(t => {
+                    t.classList.remove('tab-active');
+                    t.classList.add('bg-gray-700');
+                });
+                
+                // Add active class to clicked tab
+                this.classList.remove('bg-gray-700');
+                this.classList.add('tab-active');
+                
+                // In a real application, we would fetch and display the appropriate leaderboard data
+                // For this demo, we'll just show a confirmation
+                console.log(`Switched to ${this.dataset.tab} leaderboard`);
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+
+        // Mr. Green AI Assistant functionality
+        const chatToggle = document.getElementById('chat-toggle');
+        const chatWidget = document.getElementById('chat-widget');
+        const chatIcon = document.getElementById('chat-icon');
+        const closeIcon = document.getElementById('close-icon');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessage = document.getElementById('send-message');
+        const quickActions = document.querySelectorAll('.quick-action');
+        
+        let isOpen = false;
+
+        // Toggle chat widget
+        chatToggle.addEventListener('click', function() {
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                chatWidget.classList.remove('hidden');
+                setTimeout(() => {
+                    chatWidget.classList.remove('scale-95', 'opacity-0');
+                    chatWidget.classList.add('scale-100', 'opacity-100');
+                }, 10);
+                chatIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            } else {
+                chatWidget.classList.add('scale-95', 'opacity-0');
+                chatWidget.classList.remove('scale-100', 'opacity-100');
+                setTimeout(() => {
+                    chatWidget.classList.add('hidden');
+                }, 300);
+                chatIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        });
+
+        // Mr. Green responses database
+        const mrGreenResponses = {
+            greetings: [
+                "Hello there, eco-warrior! How can I help you save the planet today?",
+                "Hi! I'm excited to talk about environmental topics with you!",
+                "Welcome! I'm here to answer all your environmental questions!"
+            ],
+            climate: [
+                "Climate change is one of the most pressing issues of our time. It's caused by greenhouse gases like CO2 trapping heat in our atmosphere. We can help by reducing energy use, using renewable sources, and supporting sustainable practices!",
+                "The Earth's climate is warming due to human activities. Simple actions like walking instead of driving, recycling, and eating less meat can make a real difference!",
+                "Climate change affects weather patterns, sea levels, and ecosystems worldwide. Every small eco-friendly action counts toward a bigger solution!"
+            ],
+            tips: [
+                "Here are some easy eco-tips: Use reusable water bottles, bike or walk when possible, recycle properly, switch to LED bulbs, and grow your own herbs!",
+                "Start small! Turn off lights when leaving rooms, unplug devices, use both sides of paper, and choose local products when shopping. Every action matters!",
+                "Try the 3 R's: Reduce consumption, Reuse items creatively, and Recycle properly. Also, consider composting food scraps and using eco-friendly cleaning products!"
+            ],
+            help: [
+                "I can help with: Environmental facts, Eco-friendly tips, Recycling guidance, Conservation advice, and Quiz preparation! What interests you most?",
+                "I'm here to discuss climate change, sustainability, renewable energy, wildlife conservation, pollution solutions, and green living tips. What would you like to explore?",
+                "Ask me about environmental science, eco-friendly practices, conservation methods, or how to live more sustainably. I love helping people become eco-heroes!"
+            ],
+            recycling: [
+                "Recycling is crucial! Different materials need different handling: Paper and cardboard go in recycling bins, electronics need special e-waste centers, and batteries require hazardous waste disposal. Always check local guidelines!",
+                "Remember the recycling symbols! Numbers 1-7 on plastics tell you what type they are. Clean containers before recycling, and never put recyclables in plastic bags unless specified by your local program.",
+                "Great recycling tip: Reduce and reuse before recycling! Fix broken items, repurpose containers, and buy products with less packaging to minimize waste."
+            ],
+            energy: [
+                "Renewable energy sources like solar, wind, and hydroelectric power are clean alternatives to fossil fuels. You can support them by choosing green energy providers or installing solar panels!",
+                "Save energy at home: Use LED bulbs, unplug devices when not in use, adjust your thermostat by a few degrees, and air-dry clothes instead of using the dryer.",
+                "Fun fact: Solar panels can last 25-30 years and wind turbines can power thousands of homes! Renewable energy is becoming cheaper and more efficient every year."
+            ],
+            default: [
+                "That's an interesting environmental question! While I might not have all the details, I encourage you to explore EcoPlay's quizzes to learn more. What specific environmental topic interests you most?",
+                "I'd love to help you learn more about that! Environmental science is vast and fascinating. Have you tried our interactive quizzes yet? They're a great way to dive deeper!",
+                "Great question! The environment is such a complex and important topic. I suggest checking out our educational resources and quizzes to learn more. Is there a specific area you'd like to focus on?"
+            ]
+        };
+
+        // Function to get Mr. Green response
+        function getMrGreenResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                return mrGreenResponses.greetings[Math.floor(Math.random() * mrGreenResponses.greetings.length)];
+            } else if (lowerMessage.includes('climate') || lowerMessage.includes('global warming') || lowerMessage.includes('greenhouse')) {
+                return mrGreenResponses.climate[Math.floor(Math.random() * mrGreenResponses.climate.length)];
+            } else if (lowerMessage.includes('tip') || lowerMessage.includes('eco-friendly') || lowerMessage.includes('sustainable') || lowerMessage.includes('green')) {
+                return mrGreenResponses.tips[Math.floor(Math.random() * mrGreenResponses.tips.length)];
+            } else if (lowerMessage.includes('help') || lowerMessage.includes('can you') || lowerMessage.includes('what can')) {
+                return mrGreenResponses.help[Math.floor(Math.random() * mrGreenResponses.help.length)];
+            } else if (lowerMessage.includes('recycle') || lowerMessage.includes('recycling') || lowerMessage.includes('waste')) {
+                return mrGreenResponses.recycling[Math.floor(Math.random() * mrGreenResponses.recycling.length)];
+            } else if (lowerMessage.includes('energy') || lowerMessage.includes('solar') || lowerMessage.includes('renewable')) {
+                return mrGreenResponses.energy[Math.floor(Math.random() * mrGreenResponses.energy.length)];
+            } else {
+                return mrGreenResponses.default[Math.floor(Math.random() * mrGreenResponses.default.length)];
+            }
+        }
+
+        // Function to add message to chat
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start gap-2 ${isUser ? 'flex-row-reverse' : ''}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isUser ? 'bg-blue-500' : 'bg-green-500'}`;
+            avatar.innerHTML = `<iconify-icon icon="${isUser ? 'mdi:account' : 'mdi:leaf'}" width="16" class="text-white"></iconify-icon>`;
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.className = `${isUser ? 'bg-blue-600' : 'bg-gray-700'} rounded-2xl ${isUser ? 'rounded-tr-md' : 'rounded-tl-md'} p-3 max-w-xs`;
+            messageBubble.innerHTML = `<p class="text-sm text-white">${message}</p>`;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageBubble);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Function to simulate typing
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'flex items-start gap-2 typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <iconify-icon icon="mdi:leaf" width="16" class="text-white"></iconify-icon>
+                </div>
+                <div class="bg-gray-700 rounded-2xl rounded-tl-md p-3">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return typingDiv;
+        }
+
+        // Send message function
+        function sendUserMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            chatInput.value = '';
+            
+            // Show typing indicator
+            const typing = showTyping();
+            
+            // Simulate response delay
+            setTimeout(() => {
+                chatMessages.removeChild(typing);
+                const response = getMrGreenResponse(message);
+                addMessage(response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        // Event listeners
+        sendMessage.addEventListener('click', sendUserMessage);
+        
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendUserMessage();
+            }
+        });
+
+        // Quick actions
+        quickActions.forEach(button => {
+            button.addEventListener('click', function() {
+                const message = this.dataset.message;
+                chatInput.value = message;
+                sendUserMessage();
+            });
+        });
+    </script>
+</body>
+</html>
