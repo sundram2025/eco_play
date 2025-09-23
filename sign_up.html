@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPlay - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #22c55e;
+            --primary-blue: #3b82f6;
+            --primary-purple: #a855f7;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #0f172a, #111827);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-text 3s linear infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.3);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating-icons {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .password-strength {
+            height: 6px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+    
+    <div class="container mx-auto flex flex-col lg:flex-row items-center justify-center gap-12 max-w-6xl">
+        <!-- Left Side - Branding & Info -->
+        <div class="w-full lg:w-1/2 text-center lg:text-left">
+            <div class="flex items-center justify-center lg:justify-start mb-6">
+                <iconify-icon icon="mdi:earth" width="42" height="42" class="text-green-400 mr-3"></iconify-icon>
+                <h1 class="text-3xl font-bold gradient-text">EcoPlay</h1>
+            </div>
+            
+            <h2 class="text-4xl font-bold mb-6">Join <span class="gradient-text">EcoPlay</span> Today</h2>
+            <p class="text-xl text-gray-300 mb-8">Create your account and start your journey towards environmental education and awareness.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="glassmorphism rounded-xl p-4 text-center">
+                    <iconify-icon icon="mdi:gamepad-variant" width="32" class="text-green-400 mb-2"></iconify-icon>
+                    <p class="text-sm font-medium">Interactive Quizzes</p>
+                </div>
+                <div class="glassmorphism rounded-xl p-4 text-center">
+                    <iconify-icon icon="mdi:trophy-award" width="32" class="text-blue-400 mb-2"></iconify-icon>
+                    <p class="text-sm font-medium">Earn Badges</p>
+                </div>
+                <div class="glassmorphism rounded-xl p-4 text-center">
+                    <iconify-icon icon="mdi:poll" width="32" class="text-purple-400 mb-2"></iconify-icon>
+                    <p class="text-sm font-medium">Leaderboards</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col space-y-4 mt-12">
+                <div class="flex items-center text-gray-300">
+                    <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400 mr-2"></iconify-icon>
+                    <span>Track your environmental knowledge progress</span>
+                </div>
+                <div class="flex items-center text-gray-300">
+                    <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400 mr-2"></iconify-icon>
+                    <span>Compete with friends and classmates</span>
+                </div>
+                <div class="flex items-center text-gray-300">
+                    <iconify-icon icon="mdi:check-circle" width="24" class="text-green-400 mr-2"></iconify-icon>
+                    <span>Earn recognition for your achievements</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side - Signup Form -->
+        <div class="w-full lg:w-1/2 flex justify-center">
+            <div class="glassmorphism rounded-2xl p-8 w-full max-w-md relative overflow-hidden">
+                <div class="absolute -top-20 -right-20 w-40 h-40 bg-green-500 rounded-full filter blur-3xl opacity-20"></div>
+                <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-blue-500 rounded-full filter blur-3xl opacity-20"></div>
+                
+                <h2 class="text-2xl font-bold text-center mb-2">Create Your Account</h2>
+                <p class="text-gray-400 text-center mb-8">Join the EcoPlay community today</p>
+                
+                <form class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-gray-300">First Name</label>
+                            <div class="relative">
+                                <iconify-icon icon="mdi:account-outline" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                                <input type="text" placeholder="First name" class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-gray-300">Last Name</label>
+                            <div class="relative">
+                                <iconify-icon icon="mdi:account-outline" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                                <input type="text" placeholder="Last name" class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-gray-300">Email Address</label>
+                        <div class="relative">
+                            <iconify-icon icon="mdi:email-outline" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="email" placeholder="Enter your email" class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-gray-300">Password</label>
+                        <div class="relative">
+                            <iconify-icon icon="mdi:lock-outline" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="password" placeholder="Create a password" class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300">
+                                <iconify-icon icon="mdi:eye-outline" width="24"></iconify-icon>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-2">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-400">Password strength</span>
+                                <span class="text-sm text-green-400 font-medium" id="password-strength-text">Weak</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="password-strength bg-red-500 h-2 rounded-full w-1/4" id="password-strength-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-gray-300">Confirm Password</label>
+                        <div class="relative">
+                            <iconify-icon icon="mdi:lock-check-outline" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <input type="password" placeholder="Confirm your password" class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-gray-300">I am a</label>
+                        <div class="relative">
+                            <iconify-icon icon="mdi:account-group" width="24" class="text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2"></iconify-icon>
+                            <select class="input-field w-full pl-12 pr-4 py-4 rounded-xl bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none">
+                                <option>Student</option>
+                                <option>Teacher</option>
+                                <option>Parent</option>
+                                <option>Environmental Enthusiast</option>
+                            </select>
+                            <iconify-icon icon="mdi:chevron-down" width="24" class="text-gray-400 absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none"></iconify-icon>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="terms" class="w-4 h-4 text-green-500 bg-gray-800 rounded focus:ring-green-500 mt-1">
+                        <label for="terms" class="text-sm text-gray-300">I agree to the <a href="#" class="text-green-400 hover:text-green-300">Terms of Service</a> and <a href="#" class="text-green-400 hover:text-green-300">Privacy Policy</a></label>
+                    </div>
+                    
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="newsletter" class="w-4 h-4 text-green-500 bg-gray-800 rounded focus:ring-green-500 mt-1">
+                        <label for="newsletter" class="text-sm text-gray-300">Send me occasional updates about new features and environmental tips</label>
+                    </div>
+                    
+                    <button type="submit" class="w-full gradient-bg text-white font-bold py-4 rounded-xl hover:scale-105 transition-transform flex items-center justify-center gap-2">
+                        <iconify-icon icon="mdi:account-plus" width="24"></iconify-icon>
+                        <span>Create Account</span>
+                    </button>
+                    
+                    <div class="relative flex items-center justify-center my-6">
+                        <div class="border-t border-gray-700 w-full"></div>
+                        <span class="bg-gray-800 px-4 text-gray-400 text-sm relative">Or sign up with</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" class="py-3 rounded-xl bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
+                            <iconify-icon icon="mdi:google" width="20"></iconify-icon>
+                            <span>Google</span>
+                        </button>
+                        <button type="button" class="py-3 rounded-xl bg-gray-800 hover:bg-gray-700 transition-colors flex items-center justify-center gap-2">
+                            <iconify-icon icon="mdi:microsoft" width="20"></iconify-icon>
+                            <span>Microsoft</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-8">
+                    <p class="text-gray-400">Already have an account? <a href="#" class="text-green-400 hover:text-green-300 transition-colors font-medium">Log in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Icons -->
+    <div class="floating-icons hidden lg:block">
+        <div class="absolute top-1/4 left-10 w-14 h-14 glassmorphism rounded-full flex items-center justify-center pulse">
+            <iconify-icon icon="mdi:leaf" width="28" class="text-green-400"></iconify-icon>
+        </div>
+        
+        <div class="absolute bottom-1/3 right-20 w-12 h-12 glassmorphism rounded-full flex items-center justify-center pulse" style="animation-delay: 1s;">
+            <iconify-icon icon="mdi:recycle" width="24" class="text-blue-400"></iconify-icon>
+        </div>
+        
+        <div class="absolute top-1/3 right-1/4 w-10 h-10 glassmorphism rounded-full flex items-center justify-center pulse" style="animation-delay: 2s;">
+            <iconify-icon icon="mdi:water" width="22" class="text-purple-400"></iconify-icon>
+        </div>
+    </div>
+
+    <script>
+        // Form validation and interaction
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.querySelector('input[type="password"]');
+            const confirmPasswordInput = document.querySelectorAll('input[type="password"]')[1];
+            const togglePasswordButton = document.querySelector('button[type="button"]');
+            const strengthBar = document.getElementById('password-strength-bar');
+            const strengthText = document.getElementById('password-strength-text');
+            
+            // Toggle password visibility
+            togglePasswordButton.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    togglePasswordButton.innerHTML = '<iconify-icon icon="mdi:eye-off-outline" width="24"></iconify-icon>';
+                } else {
+                    passwordInput.type = 'password';
+                    togglePasswordButton.innerHTML = '<iconify-icon icon="mdi:eye-outline" width="24"></iconify-icon>';
+                }
+            });
+            
+            // Password strength meter
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Check password strength
+                if (password.length > 0) strength += 1;
+                if (password.length >= 8) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                // Update strength bar and text
+                if (strength === 0) {
+                    strengthBar.style.width = '0%';
+                    strengthBar.style.backgroundColor = '#ef4444';
+                    strengthText.textContent = 'None';
+                } else if (strength === 1) {
+                    strengthBar.style.width = '25%';
+                    strengthBar.style.backgroundColor = '#ef4444';
+                    strengthText.textContent = 'Weak';
+                } else if (strength === 2) {
+                    strengthBar.style.width = '50%';
+                    strengthBar.style.backgroundColor = '#f59e0b';
+                    strengthText.textContent = 'Fair';
+                } else if (strength === 3) {
+                    strengthBar.style.width = '75%';
+                    strengthBar.style.backgroundColor = '#84cc16';
+                    strengthText.textContent = 'Good';
+                } else if (strength === 4) {
+                    strengthBar.style.width = '90%';
+                    strengthBar.style.backgroundColor = '#22c55e';
+                    strengthText.textContent = 'Strong';
+                } else {
+                    strengthBar.style.width = '100%';
+                    strengthBar.style.backgroundColor = '#22c55e';
+                    strengthText.textContent = 'Very Strong';
+                }
+            });
+            
+            // Form submission
+            const signupForm = document.querySelector('form');
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                
+                // Validate passwords match
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Validate terms agreement
+                const termsAgreed = document.getElementById('terms').checked;
+                if (!termsAgreed) {
+                    alert('You must agree to the Terms of Service and Privacy Policy');
+                    return;
+                }
+                
+                // Show loading state
+                submitButton.innerHTML = '<iconify-icon icon="mdi:loading" class="animate-spin"></iconify-icon> Creating account...';
+                submitButton.disabled = true;
+                
+                // Simulate signup process
+                setTimeout(() => {
+                    alert('Account created successfully! Welcome to EcoPlay.');
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                    
+                    // In a real application, you would redirect here
+                    // window.location.href = 'dashboard.html';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
