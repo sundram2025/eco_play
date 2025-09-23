@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoMentor AI - Environmental Learning Assistant</title>
+    <!-- TailwindCSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconify for icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --primary-green: #22c55e;
+            --primary-blue: #3b82f6;
+            --primary-purple: #a855f7;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to bottom, #0f172a, #111827);
+            color: white;
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-text 3s linear infinite;
+        }
+        
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .chat-container {
+            max-width: 1000px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(34, 197, 94, 0.5); }
+            to { box-shadow: 0 0 30px rgba(34, 197, 94, 0.8); }
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(34, 197, 94, 0.3) transparent;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(34, 197, 94, 0.3);
+            border-radius: 4px;
+        }
+        
+        .message {
+            max-width: 75%;
+            padding: 18px 22px;
+            border-radius: 20px;
+            animation: slideIn 0.4s ease;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            align-self: flex-end;
+            color: white;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+        
+        .bot-message {
+            background: rgba(255, 255, 255, 0.1);
+            align-self: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            position: relative;
+        }
+        
+        .bot-message::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(45deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+            border-radius: 20px;
+            z-index: -1;
+            opacity: 0.2;
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 22px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            align-self: flex-start;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        .chat-input-container {
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 18px 22px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+            resize: none;
+            min-height: 54px;
+            max-height: 150px;
+            font-family: inherit;
+            font-size: 15px;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .send-button {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            border: none;
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        }
+        
+        .send-button:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+        
+        .quick-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .suggestion-chip {
+            padding: 12px 18px;
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .suggestion-chip:hover {
+            background: rgba(34, 197, 94, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+        }
+        
+        .welcome-section {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            margin: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 600px;
+                margin: 10px;
+            }
+            
+            .chat-messages {
+                padding: 20px;
+            }
+            
+            .chat-input-container {
+                padding: 20px;
+            }
+            
+            .message {
+                max-width: 85%;
+                padding: 14px 18px;
+            }
+            
+            .welcome-section {
+                margin: 15px;
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full py-4 px-6 lg:px-12 flex justify-between items-center glassmorphism z-50">
+        <div class="flex items-center">
+            <iconify-icon icon="mdi:leaf" width="32" height="32" class="text-green-400 mr-2"></iconify-icon>
+            <h1 class="text-2xl font-bold gradient-text">EcoMentor AI</h1>
+        </div>
+        
+        <div class="hidden md:flex space-x-8 items-center">
+            <a href="index.html" class="hover:text-green-400 transition-colors font-medium">← Back to EcoPlay</a>
+            <a href="#" class="hover:text-green-400 transition-colors font-medium">Help</a>
+        </div>
+        
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+            <a href="index.html" class="text-white hover:text-green-400 transition-colors">
+                <iconify-icon icon="mdi:arrow-left" width="32" height="32"></iconify-icon>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-24 pb-10 px-6 lg:px-12 min-h-screen">
+        <div class="container mx-auto max-w-6xl">
+            <!-- Header Section -->
+            <div class="text-center mb-8">
+                <div class="floating mx-auto mb-6" style="width: fit-content;">
+                    <div class="chat-avatar pulse" style="width: 80px; height: 80px;">
+                        <iconify-icon icon="mdi:robot-excited" width="40" class="text-white"></iconify-icon>
+                    </div>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Chat with <span class="gradient-text">EcoMentor AI</span></h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">Your dedicated environmental learning assistant. Get instant answers about climate change, sustainability, renewable energy, and eco-friendly living.</p>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="glassmorphism rounded-3xl chat-container mx-auto">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="flex items-center gap-4">
+                        <div class="chat-avatar">
+                            <iconify-icon icon="mdi:leaf" width="32" class="text-white"></iconify-icon>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">EcoMentor AI Assistant</h3>
+                            <div class="flex items-center gap-2 text-sm text-green-400">
+                                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                <span>Online & Ready to Help</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <iconify-icon icon="mdi:shield-check" width="16" class="mr-1"></iconify-icon>
+                        Secure & Private
+                    </div>
+                </div>
+                
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-section">
+                        <h3 class="text-2xl font-bold mb-4">Welcome to EcoMentor AI!</h3>
+                        <p class="text-gray-300 mb-6">I'm your AI environmental assistant, here to help you learn about sustainability, climate action, and eco-friendly living. Ask me anything about environmental topics!</p>
+                        <div class="text-sm text-gray-400 flex items-center justify-center gap-2">
+                            <iconify-icon icon="mdi:lightbulb" width="16"></iconify-icon>
+                            <span>Try the suggested topics below or ask your own questions</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Suggestions -->
+                    <div class="quick-suggestions">
+                        <div class="suggestion-chip" data-message="How can I reduce my carbon footprint?">Reduce Carbon Footprint</div>
+                        <div class="suggestion-chip" data-message="Tell me about renewable energy sources">Renewable Energy</div>
+                        <div class="suggestion-chip" data-message="What are the best recycling practices?">Recycling Tips</div>
+                        <div class="suggestion-chip" data-message="Climate change solutions for individuals">Climate Solutions</div>
+                        <div class="suggestion-chip" data-message="Sustainable living tips for beginners">Sustainable Living</div>
+                        <div class="suggestion-chip" data-message="How does deforestation affect climate?">Deforestation Impact</div>
+                    </div>
+                    
+                    <!-- Typing Indicator -->
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            class="chat-input" 
+                            id="chatInput" 
+                            placeholder="Ask me about environmental topics, sustainability, or climate solutions..."
+                            rows="1"
+                        ></textarea>
+                        <button class="send-button" id="sendButton" disabled>
+                            <iconify-icon icon="mdi:send" width="24" class="text-white"></iconify-icon>
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-3 text-center">
+                        <iconify-icon icon="mdi:information" width="14" class="mr-1"></iconify-icon>
+                        EcoMentor provides educational information to help you learn about environmental topics
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 lg:px-12 bg-gray-900 border-t border-gray-800">
+        <div class="container mx-auto max-w-6xl text-center">
+            <div class="flex items-center justify-center mb-4">
+                <iconify-icon icon="mdi:leaf" width="24" class="text-green-400 mr-2"></iconify-icon>
+                <h2 class="text-lg font-bold gradient-text">EcoMentor AI</h2>
+            </div>
+            <p class="text-gray-400 text-sm">Part of the EcoPlay environmental education platform</p>
+        </div>
+    </footer>
+
+    <script>
+        class EcoMentorStandalone {
+            constructor() {
+                this.chatMessages = document.getElementById('chatMessages');
+                this.chatInput = document.getElementById('chatInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                
+                this.initializeEventListeners();
+                this.initializeSuggestions();
+                
+                // Focus input when page loads
+                setTimeout(() => {
+                    this.chatInput.focus();
+                }, 500);
+            }
+            
+            initializeEventListeners() {
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                
+                this.chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                this.chatInput.addEventListener('input', () => {
+                    this.sendButton.disabled = !this.chatInput.value.trim();
+                    this.autoResize();
+                });
+            }
+            
+            initializeSuggestions() {
+                document.querySelectorAll('.suggestion-chip').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        const message = chip.getAttribute('data-message');
+                        this.chatInput.value = message;
+                        this.sendMessage();
+                    });
+                });
+            }
+            
+            autoResize() {
+                this.chatInput.style.height = 'auto';
+                this.chatInput.style.height = this.chatInput.scrollHeight + 'px';
+            }
+            
+            addMessage(content, sender = 'user') {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'bot-message'}`;
+                
+                const p = document.createElement('p');
+                p.style.margin = '0';
+                p.innerHTML = content.replace(/\n/g, '<br>');
+                messageDiv.appendChild(p);
+                
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                // Hide welcome and suggestions after first user message
+                if (sender === 'user') {
+                    const welcome = document.querySelector('.welcome-section');
+                    const suggestions = document.querySelector('.quick-suggestions');
+                    if (welcome) welcome.style.display = 'none';
+                    if (suggestions) suggestions.style.display = 'none';
+                }
+            }
+            
+            sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message) return;
+                
+                this.addMessage(message, 'user');
+                this.chatInput.value = '';
+                this.chatInput.style.height = 'auto';
+                this.sendButton.disabled = true;
+                
+                this.showTyping();
+                
+                setTimeout(() => {
+                    this.hideTyping();
+                    const response = this.getEnvironmentalResponse(message.toLowerCase());
+                    this.addMessage(response, 'bot');
+                }, 2000);
+            }
+            
+            getEnvironmentalResponse(message) {
+                if (message.includes('carbon footprint') || message.includes('reduce carbon')) {
+                    return '<strong>Reducing Your Carbon Footprint</strong><br><br>Here are the most effective strategies:<br><br>• <strong>Transportation:</strong> Use public transport, bike, or walk. Consider electric vehicles for long-term impact<br>• <strong>Diet:</strong> Reduce meat consumption, especially beef. Plant-based meals have 50-90% lower carbon footprints<br>• <strong>Energy:</strong> Switch to LED bulbs, unplug devices, use programmable thermostats<br>• <strong>Home:</strong> Improve insulation, use renewable energy if possible<br>• <strong>Consumption:</strong> Buy less, choose durable products, repair instead of replacing<br><br>Which area would you like to focus on first?';
+                }
+                
+                if (message.includes('renewable energy')) {
+                    return '<strong>Renewable Energy Sources</strong><br><br><strong>Solar Power:</strong> Harnesses sunlight through photovoltaic panels. Most scalable renewable source.<br><br><strong>Wind Energy:</strong> Uses air movement to generate electricity. Fastest-growing renewable technology.<br><br><strong>Hydroelectric:</strong> Generates power from flowing water. Provides consistent, reliable energy.<br><br><strong>Geothermal:</strong> Taps Earth\'s internal heat. Provides both electricity and heating/cooling.<br><br><strong>Biomass:</strong> Uses organic materials for energy. Can provide carbon-neutral power when managed sustainably.<br><br><strong>Benefits:</strong> Zero emissions during operation, infinite availability, decreasing costs, job creation.<br><br>Would you like details about any specific renewable energy type?';
+                }
+                
+                if (message.includes('recycling') || message.includes('waste')) {
+                    return '<strong>Smart Recycling & Waste Reduction</strong><br><br><strong>The 5 R\'s Hierarchy:</strong><br>1. <strong>Refuse</strong> - Avoid unnecessary items<br>2. <strong>Reduce</strong> - Buy only what you need<br>3. <strong>Reuse</strong> - Find new purposes for items<br>4. <strong>Recycle</strong> - Process materials into new products<br>5. <strong>Rot</strong> - Compost organic waste<br><br><strong>Recycling Best Practices:</strong><br>• Clean containers before recycling<br>• Separate materials according to local guidelines<br>• Special disposal for electronics, batteries, hazardous materials<br>• Check recycling numbers on plastics (1, 2, 5 are most recyclable)<br><br><strong>Impact:</strong> Proper waste management can reduce household environmental impact by 25-40%.<br><br>What specific materials are you looking to recycle?';
+                }
+                
+                if (message.includes('climate change') || message.includes('climate solutions')) {
+                    return '<strong>Climate Change Solutions</strong><br><br><strong>Individual Actions:</strong><br>• Reduce energy consumption at home<br>• Choose sustainable transportation options<br>• Support renewable energy initiatives<br>• Make climate-conscious food choices<br>• Reduce, reuse, and recycle materials<br><br><strong>Community & System Changes:</strong><br>• Transition to renewable energy infrastructure<br>• Protect and restore forests and ecosystems<br>• Develop and deploy clean technologies<br>• Implement carbon pricing and green policies<br>• Support climate education and awareness<br><br><strong>Why Both Matter:</strong> Individual actions create demand for sustainable options and demonstrate commitment, while systemic changes provide the infrastructure and policies needed for large-scale impact.<br><br>What aspect of climate action would you like to explore further?';
+                }
+                
+                if (message.includes('sustainable living') || message.includes('eco living') || message.includes('beginners')) {
+                    return '<strong>Sustainable Living Guide for Beginners</strong><br><br><strong>Energy & Water:</strong><br>• Use programmable thermostats (save 10-15% on heating/cooling)<br>• Switch to LED lighting (uses 75% less energy)<br>• Fix leaks promptly (a dripping faucet wastes 3,000 gallons/year)<br>• Take shorter showers and use cold water for washing clothes<br><br><strong>Transportation:</strong><br>• Walk, bike, or use public transit when possible<br>• Combine errands into single trips<br>• Work from home when feasible<br>• Consider electric or hybrid vehicles for your next car<br><br><strong>Food & Consumption:</strong><br>• Eat more plant-based meals (even one day/week helps)<br>• Buy local and seasonal produce<br>• Reduce food waste by meal planning<br>• Choose products with minimal or recyclable packaging<br><br><strong>Start Small:</strong> Pick one area to focus on first, then gradually expand. Small consistent changes are more effective than trying to change everything at once!<br><br>Which area feels most manageable for you to start with?';
+                }
+                
+                if (message.includes('deforestation')) {
+                    return '<strong>Deforestation and Climate Impact</strong><br><br><strong>How Deforestation Affects Climate:</strong><br>• <strong>Carbon Release:</strong> Trees store carbon dioxide - when cut down, this CO₂ is released into the atmosphere<br>• <strong>Reduced Carbon Absorption:</strong> Fewer trees means less CO₂ is removed from the air<br>• <strong>Local Climate Changes:</strong> Forests regulate temperature and rainfall patterns<br>• <strong>Biodiversity Loss:</strong> Ecosystems that help regulate climate are destroyed<br><br><strong>Major Causes:</strong><br>• Agriculture expansion (especially cattle ranching and palm oil)<br>• Logging for timber and paper products<br>• Urban development<br>• Infrastructure projects<br><br><strong>Solutions:</strong><br>• Support sustainable forestry and agriculture<br>• Choose products certified by FSC (Forest Stewardship Council)<br>• Reduce paper consumption, go digital when possible<br>• Support organizations working on reforestation<br>• Choose sustainable alternatives to palm oil products<br><br><strong>Impact:</strong> Deforestation accounts for about 10-15% of global greenhouse gas emissions.<br><br>Would you like to know more about how to support reforestation efforts?';
+                }
+                
+                // Default comprehensive response
+                return '<strong>Welcome to EcoMentor AI!</strong><br><br>I\'m here to help you learn about environmental topics and sustainable living. I can provide detailed information about:<br><br>• <strong>Climate Change:</strong> Science, causes, impacts, and solutions<br>• <strong>Sustainable Living:</strong> Practical tips for eco-friendly lifestyle choices<br>• <strong>Renewable Energy:</strong> Solar, wind, hydro, and other clean energy sources<br>• <strong>Conservation:</strong> Protecting ecosystems, wildlife, and natural resources<br>• <strong>Green Technology:</strong> Innovations in clean tech and sustainability<br>• <strong>Carbon Footprint:</strong> Understanding and reducing your environmental impact<br>• <strong>Recycling & Waste:</strong> Best practices for waste reduction and circular economy<br><br>Feel free to ask specific questions or request detailed explanations on any environmental topic. What would you like to learn about today?';
+            }
+            
+            showTyping() {
+                this.typingIndicator.style.display = 'flex';
+                this.scrollToBottom();
+            }
+            
+            hideTyping() {
+                this.typingIndicator.style.display = 'none';
+            }
+            
+            scrollToBottom() {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new EcoMentorStandalone();
+        });
+    </script>
+</body>
+</html>
