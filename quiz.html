@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoPlay - Environmental Education Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --primary-green: #22c55e;
+      --primary-blue: #3b82f6;
+      --primary-purple: #a855f7;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #111827);
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradient-text 3s linear infinite;
+    }
+
+    @keyframes gradient-text {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .gradient-bg {
+      background: linear-gradient(-45deg, var(--primary-green), var(--primary-blue), var(--primary-purple));
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .floating-icons {
+      animation: floating 6s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .progress-bar {
+      transition: width 1s linear;
+    }
+    
+    .option-card {
+      transition: all 0.3s ease;
+    }
+    
+    .option-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .correct-answer {
+      background: rgba(34, 197, 94, 0.3);
+      border: 2px solid #22c55e;
+    }
+    
+    .wrong-answer {
+      background: rgba(239, 68, 68, 0.3);
+      border: 2px solid #ef4444;
+    }
+    
+    .category-marker {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .difficulty-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .difficulty-btn:hover {
+      transform: translateY(-3px);
+    }
+    
+    .difficulty-btn.easy {
+      background: rgba(34, 197, 94, 0.2);
+      border: 1px solid #22c55e;
+    }
+    
+    .difficulty-btn.moderate {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid #3b82f6;
+    }
+    
+    .difficulty-btn.hard {
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid #a855f7;
+    }
+    
+    .difficulty-btn.active {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    
+    .certificate {
+      background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+      color: #0f172a;
+      border: 20px solid #22c55e;
+      padding: 40px;
+      text-align: center;
+      width: 800px;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <!-- Background glowing circles -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-purple-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-green-500 rounded-full filter blur-3xl opacity-20 animate-pulse"></div>
+  
+  <!-- Main Container -->
+  <div class="w-full max-w-4xl z-10">
+    <!-- Header with Difficulty Selection -->
+    <div class="glassmorphism rounded-3xl p-6 mb-6">
+      <h1 class="text-3xl font-bold gradient-text text-center mb-6">EcoPlay Quiz Challenge</h1>
+      
+      <div class="text-center mb-4">
+        <h2 class="text-xl font-semibold">Select Difficulty Level</h2>
+        <p class="text-gray-300">Choose your challenge level</p>
+      </div>
+      
+      <div class="flex flex-wrap justify-center gap-4 mb-4">
+        <button class="difficulty-btn easy glassmorphism px-6 py-3 rounded-full font-medium" data-level="easy">
+          🌱 Easy
+        </button>
+        <button class="difficulty-btn moderate glassmorphism px-6 py-3 rounded-full font-medium" data-level="moderate">
+          🌿 Moderate
+        </button>
+        <button class="difficulty-btn hard glassmorphism px-6 py-3 rounded-full font-medium" data-level="hard">
+          🌳 Hard
+        </button>
+      </div>
+      
+      <div class="text-center text-sm text-gray-300">
+        <p>Each level contains 20 questions about environmental education</p>
+        <p>Score 80% or higher to earn a certificate!</p>
+      </div>
+    </div>
+    
+    <!-- Quiz Container (Initially Hidden) -->
+    <div id="quiz-container" class="glassmorphism rounded-3xl p-8 hidden">
+      <!-- Quiz Header -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-2xl font-bold gradient-text">EcoPlay Quiz</h1>
+          <p id="difficulty-display" class="text-sm text-gray-300">Difficulty: <span id="current-difficulty">Easy</span></p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="bg-gray-800 px-4 py-2 rounded-full">
+            <span class="font-medium">Score: </span>
+            <span id="score" class="font-bold">0</span>
+          </div>
+          <div class="bg-gray-800 px-4 py-2 rounded-full">
+            <span class="font-medium">Time: </span>
+            <span id="timer" class="font-bold">30</span>s
+          </div>
+        </div>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
+        <div id="progress-bar" class="gradient-bg h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+      </div>
+      
+      <!-- Question Container -->
+      <div id="question-container" class="mb-8 relative">
+        <span id="category-marker" class="category-marker">Environmental Education</span>
+        <h2 class="text-xl font-semibold mb-2">Question <span id="question-number">1</span>/<span id="total-questions">20</span></h2>
+        <p id="question-text" class="text-2xl font-bold mb-6">What is the main goal of gamified environmental education?</p>
+        
+        <!-- Options Container -->
+        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Options will be dynamically inserted here -->
+        </div>
+      </div>
+      
+      <!-- Feedback Container (initially hidden) -->
+      <div id="feedback-container" class="hidden mb-8">
+        <div class="glassmorphism p-6 rounded-2xl">
+          <h3 class="text-xl font-bold mb-4 flex items-center">
+            <span id="feedback-icon" class="mr-2">✅</span>
+            <span id="feedback-title">Correct!</span>
+          </h3>
+          <p id="feedback-text" class="text-lg">The correct answer is: <span id="correct-answer" class="font-bold">To make learning more fun and engaging</span></p>
+          <p id="explanation" class="mt-2 text-gray-300">Gamification aims to increase engagement and motivation through game elements.</p>
+        </div>
+      </div>
+      
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between">
+        <button id="prev-btn" class="glassmorphism px-6 py-3 rounded-full font-medium opacity-70 cursor-not-allowed" disabled>
+          Previous
+        </button>
+        <button id="next-btn" class="gradient-bg px-6 py-3 rounded-full font-medium">
+          Next Question
+        </button>
+        <button id="submit-btn" class="glassmorphism px-6 py-3 rounded-full font-medium hidden">
+          Submit Quiz
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Results Modal (initially hidden) -->
+  <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="glassmorphism rounded-3xl w-full max-w-2xl p-8 mx-4">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold gradient-text mb-4">Quiz Completed!</h2>
+        <div class="flex justify-center mb-6">
+          <div class="bg-gray-800 rounded-full w-32 h-32 flex items-center justify-center">
+            <span class="text-4xl font-bold gradient-text" id="final-score">0</span>
+            <span class="text-lg">/</span>
+            <span id="total-score" class="text-lg">20</span>
+          </div>
+        </div>
+        <p id="results-message" class="text-xl mb-6">You scored 0 out of 20 points!</p>
+        
+        <!-- Certificate Section (Visible only if score >= 80%) -->
+        <div id="certificate-section" class="hidden mb-6">
+          <div class="glassmorphism p-6 rounded-2xl mb-4">
+            <h3 class="text-2xl font-bold gradient-text mb-2">🎉 Congratulations!</h3>
+            <p class="text-lg">You've earned an EcoPlay Certificate of Achievement!</p>
+          </div>
+          <button id="download-certificate" class="gradient-bg px-6 py-3 rounded-full font-medium mb-4">
+            Download Certificate
+          </button>
+        </div>
+        
+        <div class="flex justify-center space-x-4">
+          <button id="review-btn" class="glassmorphism px-6 py-3 rounded-full font-medium">
+            Review Answers
+          </button>
+          <button id="restart-btn" class="gradient-bg px-6 py-3 rounded-full font-medium">
+            Try Again
+          </button>
+          <button id="change-difficulty" class="glassmorphism px-6 py-3 rounded-full font-medium">
+            Change Level
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Certificate Template (Hidden) -->
+  <div id="certificate-template" class="certificate fixed top-0 left-0 z-50 hidden">
+    <div class="mb-8">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24'%3E%3Cpath fill='%2322c55e' d='M12 2L2 7l10 5l10-5l-10-5m0 2.5L20 7l-8 4l-8-4l8-4.5M2 13v5c0 1.1.9 2 2 2h4V11H4c-1.1 0-2 .9-2 2v.5m20 0V13c0-1.1-.9-2-2-2h-4v9h4c1.1 0 2-.9 2-2v-5.5m-10-3.5v9l-4 2v-2H4v-5c0-1.1.9-2 2-2h4.5c.3 0 .5.2.5.5Z'/%3E%3C/svg%3E" alt="EcoPlay Logo" class="mx-auto mb-4">
+      <h1 class="text-4xl font-bold text-green-600 mb-2">EcoPlay</h1>
+      <h2 class="text-2xl text-gray-700">Certificate of Achievement</h2>
+    </div>
+    
+    <div class="mb-8">
+      <p class="text-xl mb-2">This certificate is awarded to</p>
+      <p class="text-2xl font-bold border-b-2 border-green-500 pb-2 mb-4">Quiz Participant</p>
+      <p class="text-xl mb-2">for successfully completing the</p>
+      <p class="text-2xl font-bold text-green-600" id="certificate-difficulty">Easy Level Quiz</p>
+    </div>
+    
+    <div class="mb-8">
+      <p class="text-lg">Score: <span id="certificate-score" class="font-bold">0</span>/<span id="certificate-total" class="font-bold">20</span></p>
+      <p class="text-lg">Date: <span id="certificate-date" class="font-bold"></span></p>
+    </div>
+    
+    <div class="mt-8">
+      <div class="flex justify-between items-center">
+        <div>
+          <div class="border-t-2 border-gray-700 pt-2 w-40">
+            <p>EcoPlay Director</p>
+          </div>
+        </div>
+        <div>
+          <div class="border-t-2 border-gray-700 pt-2 w-40">
+            <p>Quiz Coordinator</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Quiz questions by difficulty level
+    const quizQuestions = {
+      easy: [
+        {
+          question: "What is the main goal of gamified environmental education?",
+          options: [
+            "To make students memorize facts",
+            "To make learning more fun and engaging",
+            "To reduce study hours",
+            "To replace teachers"
+          ],
+          correctAnswer: 1,
+          explanation: "Gamification aims to increase engagement and motivation through game elements."
+        },
+        {
+          question: "Which element is often used in gamification to motivate learners?",
+          options: [
+            "Boring lectures",
+            "Rewards and points",
+            "Long essays",
+            "None of the above"
+          ],
+          correctAnswer: 1,
+          explanation: "Rewards and points systems provide incentives for participation and achievement."
+        },
+        {
+          question: "Badges in gamification represent:",
+          options: [
+            "Monetary rewards",
+            "Symbols of achievement",
+            "Penalties",
+            "Attendance"
+          ],
+          correctAnswer: 1,
+          explanation: "Badges serve as visual representations of accomplishments and milestones."
+        },
+        {
+          question: "Which is a common feature of gamified education?",
+          options: [
+            "Strict tests only",
+            "Leaderboards",
+            "Silent reading",
+            "Written reports only"
+          ],
+          correctAnswer: 1,
+          explanation: "Leaderboards foster healthy competition and motivate learners to improve."
+        },
+        {
+          question: "Gamification in environmental education mainly helps students to:",
+          options: [
+            "Forget complex topics",
+            "Experience concepts in real-world like scenarios",
+            "Avoid studying",
+            "Get distracted"
+          ],
+          correctAnswer: 1,
+          explanation: "Simulations and scenarios help students understand real-world applications."
+        },
+        {
+          question: "Which game mechanic can be used to teach recycling?",
+          options: [
+            "Puzzle-solving",
+            "Role play as waste sorter",
+            "Racing",
+            "Shooting"
+          ],
+          correctAnswer: 1,
+          explanation: "Role-playing helps students understand the sorting process practically."
+        },
+        {
+          question: "Which theme fits best for a game on renewable energy?",
+          options: [
+            "Building a solar-powered city",
+            "Competing in a car race",
+            "Cooking fast food",
+            "Fashion designing"
+          ],
+          correctAnswer: 0,
+          explanation: "Building simulations help understand renewable energy implementation."
+        },
+        {
+          question: "Gamified education can simulate:",
+          options: [
+            "Pollution control methods",
+            "Resource management",
+            "Climate change effects",
+            "All of the above"
+          ],
+          correctAnswer: 3,
+          explanation: "Games can simulate various environmental scenarios for experiential learning."
+        },
+        {
+          question: "Which reward system works well in teaching environmental topics?",
+          options: [
+            "Extra pollution points",
+            "Green credits",
+            "Negative marks",
+            "Detention cards"
+          ],
+          correctAnswer: 1,
+          explanation: "Green credits reinforce positive environmental behaviors."
+        },
+        {
+          question: "Students planting virtual trees in a game is an example of:",
+          options: [
+            "Simulation learning",
+            "Passive learning",
+            "Memorization",
+            "None"
+          ],
+          correctAnswer: 0,
+          explanation: "Simulations help understand processes without real-world consequences."
+        },
+        {
+          question: "Gamification increases:",
+          options: [
+            "Student boredom",
+            "Student engagement and motivation",
+            "Paperwork for teachers",
+            "Time wastage"
+          ],
+          correctAnswer: 1,
+          explanation: "Game elements make learning more engaging and motivating."
+        },
+        {
+          question: "Which skill improves through gamified group challenges?",
+          options: [
+            "Isolation",
+            "Teamwork and collaboration",
+            "Sleep hours",
+            "None"
+          ],
+          correctAnswer: 1,
+          explanation: "Collaborative games foster teamwork skills."
+        },
+        {
+          question: "Gamified quizzes about biodiversity help in:",
+          options: [
+            "Passive recall only",
+            "Active participation and awareness",
+            "Avoiding study",
+            "Replacing science books"
+          ],
+          correctAnswer: 1,
+          explanation: "Interactive quizzes engage students more effectively than passive learning."
+        },
+        {
+          question: "Why are levels in games important in learning?",
+          options: [
+            "They create frustration",
+            "They show progress and mastery",
+            "They reduce knowledge",
+            "They add confusion"
+          ],
+          correctAnswer: 1,
+          explanation: "Levels provide a sense of progression and accomplishment."
+        },
+        {
+          question: "Which is a psychological benefit of gamification?",
+          options: [
+            "Stress increase",
+            "Lack of focus",
+            "Sense of achievement",
+            "None"
+          ],
+          correctAnswer: 2,
+          explanation: "Gamification provides a sense of accomplishment through rewards and progress."
+        },
+        {
+          question: "Which topic can be best taught using a role-playing game?",
+          options: [
+            "Food chain balance",
+            "Types of pencils",
+            "Math formulas",
+            "Grammar rules"
+          ],
+          correctAnswer: 0,
+          explanation: "Role-playing helps understand ecological relationships and balance."
+        },
+        {
+          question: "A game showing sea animals trapped in plastic helps students understand:",
+          options: [
+            "Deforestation",
+            "Marine pollution",
+            "Solar energy",
+            "Astronomy"
+          ],
+          correctAnswer: 1,
+          explanation: "Visualizing the impact of plastic pollution raises awareness."
+        },
+        {
+          question: "Which environmental issue can be shown through resource management games?",
+          options: [
+            "Overfishing",
+            "Sustainable farming",
+            "Deforestation",
+            "All of the above"
+          ],
+          correctAnswer: 3,
+          explanation: "Resource management games can simulate various environmental challenges."
+        },
+        {
+          question: "Collecting points for saving electricity in a virtual home is an example of:",
+          options: [
+            "Punishment system",
+            "Positive reinforcement",
+            "Negative scoring",
+            "Distraction"
+          ],
+          correctAnswer: 1,
+          explanation: "Positive reinforcement encourages desired behaviors through rewards."
+        },
+        {
+          question: "Games about melting ice caps mainly teach about:",
+          options: [
+            "Space travel",
+            "Global warming",
+            "Ancient history",
+            "Nutrition"
+          ],
+          correctAnswer: 1,
+          explanation: "These games visualize the effects of climate change on polar regions."
+        }
+      ],
+      moderate: [
+        // 20 moderate questions would go here
+        {
+          question: "Which of these is often used for gamified quizzes?",
+          options: [
+            "Kahoot",
+            "MS Paint",
+            "Excel only",
+            "WordPad"
+          ],
+          correctAnswer: 0,
+          explanation: "Kahoot is a popular platform for creating and playing gamified quizzes."
+        },
+        // Additional 19 moderate questions...
+      ],
+      hard: [
+        // 20 hard questions would go here
+        {
+          question: "Gamification can be integrated with which teaching method?",
+          options: [
+            "Traditional classroom",
+            "Online learning",
+            "Field trips",
+            "All of the above"
+          ],
+          correctAnswer: 3,
+          explanation: "Gamification elements can enhance various teaching approaches."
+        },
+        // Additional 19 hard questions...
+      ]
+    };
+
+    // Quiz state variables
+    let currentQuestion = 0;
+    let score = 0;
+    let timeLeft = 30;
+    let timerInterval;
+    let userAnswers = [];
+    let quizCompleted = false;
+    let currentDifficulty = 'easy';
+    let currentQuestions = [];
+
+    // DOM elements
+    const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+    const quizContainer = document.getElementById('quiz-container');
+    const difficultyDisplay = document.getElementById('current-difficulty');
+    const questionNumberEl = document.getElementById('question-number');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsContainerEl = document.getElementById('options-container');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+    const progressBarEl = document.getElementById('progress-bar');
+    const feedbackContainerEl = document.getElementById('feedback-container');
+    const feedbackTitleEl = document.getElementById('feedback-title');
+    const feedbackIconEl = document.getElementById('feedback-icon');
+    const correctAnswerEl = document.getElementById('correct-answer');
+    const explanationEl = document.getElementById('explanation');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsModal = document.getElementById('results-modal');
+    const finalScoreEl = document.getElementById('final-score');
+    const totalScoreEl = document.getElementById('total-score');
+    const resultsMessageEl = document.getElementById('results-message');
+    const reviewBtn = document.getElementById('review-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const changeDifficultyBtn = document.getElementById('change-difficulty');
+    const certificateSection = document.getElementById('certificate-section');
+    const downloadCertificateBtn = document.getElementById('download-certificate');
+    const certificateTemplate = document.getElementById('certificate-template');
+
+    // Event listeners for difficulty selection
+    difficultyBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const level = btn.dataset.level;
+        currentDifficulty = level;
+        currentQuestions = quizQuestions[level];
+        
+        // Update UI to show selected difficulty
+        difficultyBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Start the quiz after a short delay
+        setTimeout(startQuiz, 500);
+      });
+    });
+
+    // Initialize quiz
+    function startQuiz() {
+      // Reset quiz state
+      currentQuestion = 0;
+      score = 0;
+      userAnswers = Array(currentQuestions.length).fill(null);
+      quizCompleted = false;
+      
+      // Update UI
+      scoreEl.textContent = '0';
+      difficultyDisplay.textContent = currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
+      totalQuestionsEl.textContent = currentQuestions.length;
+      totalScoreEl.textContent = currentQuestions.length;
+      
+      // Show quiz container, hide difficulty selection
+      document.querySelector('.glassmorphism.rounded-3xl').classList.add('hidden');
+      quizContainer.classList.remove('hidden');
+      
+      // Load first question
+      loadQuestion();
+      startTimer();
+    }
+
+    // Load current question
+    function loadQuestion() {
+      // Reset UI state
+      clearSelection();
+      feedbackContainerEl.classList.add('hidden');
+      nextBtn.disabled = true;
+      
+      // Update question info
+      questionNumberEl.textContent = currentQuestion + 1;
+      questionTextEl.textContent = currentQuestions[currentQuestion].question;
+      
+      // Update progress bar
+      progressBarEl.style.width = `${((currentQuestion + 1) / currentQuestions.length) * 100}%`;
+      
+      // Load options
+      optionsContainerEl.innerHTML = '';
+      currentQuestions[currentQuestion].options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.classList.add('option-card', 'glassmorphism', 'p-4', 'rounded-xl', 'cursor-pointer');
+        optionElement.textContent = option;
+        optionElement.dataset.index = index;
+        
+        // If user has already answered this question, show their selection
+        if (userAnswers[currentQuestion] !== null) {
+          if (userAnswers[currentQuestion] === index) {
+            optionElement.classList.add('wrong-answer');
+          }
+          if (index === currentQuestions[currentQuestion].correctAnswer) {
+            optionElement.classList.add('correct-answer');
+          }
+          optionElement.classList.add('cursor-not-allowed');
+          optionElement.style.pointerEvents = 'none';
+        } else {
+          optionElement.addEventListener('click', selectOption);
+        }
+        
+        optionsContainerEl.appendChild(optionElement);
+      });
+      
+      // Update navigation buttons
+      prevBtn.disabled = currentQuestion === 0;
+      
+      if (userAnswers[currentQuestion] !== null) {
+        showFeedback();
+        nextBtn.disabled = false;
+      }
+      
+      // Show submit button on last question if answered
+      if (currentQuestion === currentQuestions.length - 1 && userAnswers[currentQuestion] !== null) {
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+      } else {
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+      }
+    }
+
+    // Handle option selection
+    function selectOption(e) {
+      if (quizCompleted) return;
+      
+      const selectedOption = parseInt(e.target.dataset.index);
+      userAnswers[currentQuestion] = selectedOption;
+      
+      // Disable all options after selection
+      const allOptions = optionsContainerEl.querySelectorAll('.option-card');
+      allOptions.forEach(option => {
+        option.removeEventListener('click', selectOption);
+        option.style.pointerEvents = 'none';
+      });
+      
+      // Show feedback
+      showFeedback();
+      
+      // Enable next button
+      nextBtn.disabled = false;
+    }
+
+    // Show feedback for current question
+    function showFeedback() {
+      const correctIndex = currentQuestions[currentQuestion].correctAnswer;
+      const userAnswer = userAnswers[currentQuestion];
+      const isCorrect = userAnswer === correctIndex;
+      
+      // Update score if correct
+      if (isCorrect && userAnswers[currentQuestion] !== null && !quizCompleted) {
+        score++;
+        scoreEl.textContent = score;
+      }
+      
+      // Show feedback container
+      feedbackContainerEl.classList.remove('hidden');
+      
+      if (isCorrect) {
+        feedbackTitleEl.textContent = 'Correct!';
+        feedbackIconEl.textContent = '✅';
+      } else {
+        feedbackTitleEl.textContent = 'Incorrect!';
+        feedbackIconEl.textContent = '❌';
+      }
+      
+      correctAnswerEl.textContent = currentQuestions[currentQuestion].options[correctIndex];
+      explanationEl.textContent = currentQuestions[currentQuestion].explanation;
+    }
+
+    // Clear selection styling
+    function clearSelection() {
+      const allOptions = optionsContainerEl.querySelectorAll('.option-card');
+      allOptions.forEach(option => {
+        option.classList.remove('correct-answer', 'wrong-answer');
+      });
+    }
+
+    // Timer functions
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 30;
+      timerEl.textContent = timeLeft;
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          if (userAnswers[currentQuestion] === null) {
+            userAnswers[currentQuestion] = -1; // Mark as unanswered
+          }
+          handleNext();
+        }
+      }, 1000);
+    }
+
+    // Navigation functions
+    function handleNext() {
+      clearInterval(timerInterval);
+      
+      if (currentQuestion < currentQuestions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+        startTimer();
+      } else {
+        // Last question - show submit button if answered
+        if (userAnswers[currentQuestion] !== null) {
+          nextBtn.classList.add('hidden');
+          submitBtn.classList.remove('hidden');
+        }
+      }
+    }
+
+    function handlePrev() {
+      clearInterval(timerInterval);
+      
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+        startTimer();
+      }
+    }
+
+    function handleSubmit() {
+      clearInterval(timerInterval);
+      quizCompleted = true;
+      
+      // Calculate final score
+      let finalScore = 0;
+      userAnswers.forEach((answer, index) => {
+        if (answer === currentQuestions[index].correctAnswer) {
+          finalScore++;
+        }
+      });
+      
+      // Show results modal
+      finalScoreEl.textContent = finalScore;
+      totalScoreEl.textContent = currentQuestions.length;
+      resultsMessageEl.textContent = `You scored ${finalScore} out of ${currentQuestions.length} points!`;
+      
+      // Show certificate section if score is 80% or higher
+      const percentage = (finalScore / currentQuestions.length) * 100;
+      if (percentage >= 80) {
+        certificateSection.classList.remove('hidden');
+      } else {
+        certificateSection.classList.add('hidden');
+      }
+      
+      resultsModal.classList.remove('hidden');
+    }
+
+    function handleRestart() {
+      resultsModal.classList.add('hidden');
+      startQuiz();
+    }
+
+    function handleReview() {
+      resultsModal.classList.add('hidden');
+      currentQuestion = 0;
+      loadQuestion();
+      
+      // Disable timer in review mode
+      clearInterval(timerInterval);
+      timerEl.textContent = '0';
+    }
+
+    function handleChangeDifficulty() {
+      resultsModal.classList.add('hidden');
+      quizContainer.classList.add('hidden');
+      document.querySelector('.glassmorphism.rounded-3xl').classList.remove('hidden');
+    }
+
+    function downloadCertificate() {
+      // Update certificate content
+      document.getElementById('certificate-difficulty').textContent = 
+        currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1) + ' Level Quiz';
+      document.getElementById('certificate-score').textContent = score;
+      document.getElementById('certificate-total').textContent = currentQuestions.length;
+      document.getElementById('certificate-date').textContent = new Date().toLocaleDateString();
+      
+      // Show certificate template
+      certificateTemplate.classList.remove('hidden');
+      
+      // Use html2canvas to convert the certificate to an image
+      html2canvas(certificateTemplate, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        // Create a download link
+        const link = document.createElement('a');
+        link.download = 'EcoPlay-Certificate.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        // Hide the certificate template
+        certificateTemplate.classList.add('hidden');
+      });
+    }
+
+    // Event listeners
+    nextBtn.addEventListener('click', handleNext);
+    prevBtn.addEventListener('click', handlePrev);
+    submitBtn.addEventListener('click', handleSubmit);
+    restartBtn.addEventListener('click', handleRestart);
+    reviewBtn.addEventListener('click', handleReview);
+    changeDifficultyBtn.addEventListener('click', handleChangeDifficulty);
+    downloadCertificateBtn.addEventListener('click', downloadCertificate);
+
+    // Initialize difficulty buttons
+    difficultyBtns[0].classList.add('active');
+  </script>
+</body>
+</html>
